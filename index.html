@@ -299,6 +299,13 @@ footer .bot { display: flex; justify-content: space-between; gap: 12px; flex-wra
 
 .max-float { position: fixed; right: 20px; bottom: 158px; z-index: 90; width: 56px; height: 56px; border-radius: 50%; background: #c83e7e; color: #fff; display: grid; place-items: center; text-decoration: none; box-shadow: 0 10px 30px rgb(0 0 0 / .25); transition: transform .25s var(--ease); font: 800 12px/1 var(--f); text-align: center; }
 .max-float:hover { transform: scale(1.1); }
+.cart-float { position: fixed; right: 20px; bottom: 228px; z-index: 90; width: 58px; height: 58px; border-radius: 50%; background: var(--paper); color: var(--lime); display: grid; place-items: center; box-shadow: 0 10px 30px rgb(200 62 126 / .35); transition: transform .25s var(--ease), box-shadow .25s; border: 1px solid var(--line); cursor: pointer; }
+.cart-float:hover { transform: scale(1.1); box-shadow: 0 14px 36px rgb(200 62 126 / .5); }
+.cart-float .cf-count { position: absolute; top: -4px; right: -4px; min-width: 20px; height: 20px; padding: 0 5px; border-radius: 999px; background: var(--lime); color: #fff; font: 800 12px/20px var(--f); text-align: center; box-shadow: 0 4px 12px rgb(200 62 126 / .5); }
+.cart-float.show-count .cf-count { display: block; }
+.cart-float .cf-count { display: none; }
+.cart-bounce2 { animation: cartBounce2 .5s var(--ease); }
+@keyframes cartBounce2 { 0% { transform: scale(1); } 35% { transform: scale(1.25); } 70% { transform: scale(.95); } 100% { transform: scale(1); } }
 .wa-float { position: fixed; right: 20px; bottom: 88px; z-index: 90; width: 58px; height: 58px; border-radius: 50%; background: #25d366; color: #fff; display: grid; place-items: center; box-shadow: 0 10px 30px rgb(37 211 102 / .45); transition: transform .25s var(--ease); }
 .wa-float:hover { transform: scale(1.1); }
 .wa-float::after { content: ''; position: absolute; inset: 0; border-radius: 50%; border: 2px solid #25d366; animation: waRing 2s ease-out infinite; }
@@ -720,6 +727,7 @@ header.scrolled { border-bottom-color: rgb(200 62 126 / .2); box-shadow: 0 10px 
 
 <a href="#top" class="totop" id="toTop" aria-label="Наверх">↑</a>
 <a href="https://wa.me/79045282692?text=%D0%97%D0%B4%D1%80%D0%B0%D0%B2%D1%81%D1%82%D0%B2%D1%83%D0%B9%D1%82%D0%B5!%20%D0%A5%D0%BE%D1%87%D1%83%20%D0%B7%D0%B0%D0%BA%D0%B0%D0%B7%D0%B0%D1%82%D1%8C%20%D1%83%D0%BA%D1%80%D0%B0%D1%88%D0%B5%D0%BD%D0%B8%D0%B5" target="_blank" rel="noopener" class="wa-float" id="waFloat" aria-label="Написать в WhatsApp"><svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.86 9.86 0 0 0 12.04 2zm0 18.15h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.22 8.22 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.25-8.24 2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.24 8.24zm4.52-6.16c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.13-.17.25-.64.81-.79.98-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.51.11-.11.25-.29.37-.43.12-.14.17-.25.25-.41.08-.17.04-.31-.02-.43-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43-.14-.01-.31-.01-.48-.01a.92.92 0 0 0-.66.31c-.23.25-.87.85-.87 2.07 0 1.22.89 2.4 1.01 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.1-.23-.16-.48-.29z" /></svg></a>`n<a href="https://web.max.ru/u/f9LHodD0cOI3aogZdhH6qV42m050VjZrRLzlteIzTpOtxNLHms2takATaN0" target="_blank" rel="noopener" class="max-float" id="maxFloat" aria-label="Написать в MAX"><span>MAX</span></a>
+<button class="cart-float" id="cartFloat" aria-label="Открыть корзину"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span class="cf-count" id="cartFloatCount">0</span></button>
 
 <script>
 (function () {
@@ -868,6 +876,7 @@ var cart = [];
   var cartPanel = document.getElementById('cartPanel'), cartOverlay = document.getElementById('cartOverlay');
   var cartItems = document.getElementById('cartItems'), cartTotal = document.getElementById('cartTotal');
   var cartSend = document.getElementById('cartSend'), cartClose = document.getElementById('cartClose');
+  var cartFloat = document.getElementById('cartFloat'), cartFloatCount = document.getElementById('cartFloatCount');
 
   document.querySelectorAll('.prod').forEach(function (prod) {
     var nameEl = prod.querySelector('h3'), priceEl = prod.querySelector('.price');
@@ -906,9 +915,12 @@ var cart = [];
     if (btn) { btn.classList.add('added'); btn.textContent = ''; setTimeout(function () { btn.textContent = '+'; btn.classList.remove('added'); }, 900); }
     updateCart();
     if (cartBtn) { cartBtn.classList.remove('cart-bounce'); void cartBtn.offsetWidth; cartBtn.classList.add('cart-bounce'); }
+    if (cartFloat) { cartFloat.classList.remove('cart-bounce2'); void cartFloat.offsetWidth; cartFloat.classList.add('cart-bounce2'); }
   }
   function updateCart() {
     cartCount.textContent = cart.length;
+    if (cartFloatCount) { cartFloatCount.textContent = cart.length; }
+    if (cartFloat) { cartFloat.classList.toggle('show-count', cart.length > 0); }
     cartCount.classList.toggle('show', cart.length > 0);
     if (cart.length === 0) {
       cartItems.innerHTML = '<div class="cart-empty">Корзина пока пуста.<br>Добавьте понравившиеся украшения кнопкой «+»</div>';
@@ -946,6 +958,7 @@ var cartSendMax = document.getElementById('cartSendMax');
     cartSendMax.href = 'https://web.max.ru/u/f9LHodD0cOI3aogZdhH6qV42m050VjZrRLzlteIzTpOtxNLHms2takATaN0?text=' + encodeURIComponent(buildCartText());
   });
     if (cartBtn) cartBtn.addEventListener('click', function () { if (cartPanel.classList.contains('open')) closeCart(); else openCart(); });
+  if (cartFloat) cartFloat.addEventListener('click', function () { if (cartPanel.classList.contains('open')) closeCart(); else openCart(); });
   if (cartOverlay) cartOverlay.addEventListener('click', closeCart);
   if (cartClose) cartClose.addEventListener('click', closeCart);
   updateCart();
