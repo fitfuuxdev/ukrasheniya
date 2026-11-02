@@ -361,7 +361,7 @@ header.scrolled { border-bottom-color: rgb(200 62 126 / .2); box-shadow: 0 10px 
   <div class="cart-items" id="cartItems"><div class="cart-empty">Корзина пока пуста.<br>Добавьте понравившиеся украшения кнопкой «+»</div></div>
   <div class="cart-foot">
     <div class="cart-total"><span>Итого</span><span id="cartTotal">0 ₽</span></div>
-    <a class="btn cart-send" id="cartSend" target="_blank" rel="noopener">Отправить в WhatsApp</a>
+    <a class="btn cart-send" id="cartSend" target="_blank" rel="noopener">Отправить в WhatsApp</a><a class="btn cart-send" id="cartSendMax" target="_blank" rel="noopener" style="background:var(--orange);color:#fff">Отправить в MAX</a>
   </div>
 </div>
 
@@ -861,7 +861,9 @@ header.scrolled { border-bottom-color: rgb(200 62 126 / .2); box-shadow: 0 10px 
     document.getElementById('popClose').addEventListener('click', function () { focus = null; zoomTarget = 1; showPop(null); });
   }
 
-  var cart = [];
+var cart = [];
+  try { var savedCart = localStorage.getItem('ukr_cart'); if (savedCart) { var parsed = JSON.parse(savedCart); if (Object.prototype.toString.call(parsed) === '[object Array]') cart = parsed.filter(function (x) { return x && x.name; }); } } catch (e) {}
+  function saveCart() { try { localStorage.setItem('ukr_cart', JSON.stringify(cart)); } catch (e) {} }
   var cartBtn = document.getElementById('cartBtn'), cartCount = document.getElementById('cartCount');
   var cartPanel = document.getElementById('cartPanel'), cartOverlay = document.getElementById('cartOverlay');
   var cartItems = document.getElementById('cartItems'), cartTotal = document.getElementById('cartTotal');
@@ -900,6 +902,7 @@ header.scrolled { border-bottom-color: rgb(200 62 126 / .2); box-shadow: 0 10px 
 
   function addToCart(name, price, btn) {
     cart.push({ name: name, price: price });
+    saveCart();
     if (btn) { btn.classList.add('added'); btn.textContent = ''; setTimeout(function () { btn.textContent = '+'; btn.classList.remove('added'); }, 900); }
     updateCart();
     if (cartBtn) { cartBtn.classList.remove('cart-bounce'); void cartBtn.offsetWidth; cartBtn.classList.add('cart-bounce'); }
@@ -917,25 +920,35 @@ header.scrolled { border-bottom-color: rgb(200 62 126 / .2); box-shadow: 0 10px 
       });
       cartItems.innerHTML = html;
       cartTotal.textContent = (total ? 'от ' + total.toLocaleString('ru-RU') + ' ₽' : '—');
-      cartItems.querySelectorAll('.del').forEach(function (d) { d.addEventListener('click', function () { cart.splice(parseInt(d.dataset.i, 10), 1); updateCart(); }); });
+      cartItems.querySelectorAll('.del').forEach(function (d) { d.addEventListener('click', function () { cart.splice(parseInt(d.dataset.i, 10), 1); saveCart(); updateCart(); }); });
     }
     buildCartLink();
   }
   function buildCartLink() {
     if (cart.length === 0) { cartSend.href = 'https://wa.me/79045282692'; return; }
     var lines = cart.map(function (it, i) { return (i + 1) + '. ' + it.name + (it.price ? ' — от ' + it.price + ' ₽' : ''); });
-    cartSend.href = 'https://wa.me/79045282692?text=' + encodeURIComponent('Здравствуйте! Хочу заказать украшения:\n\n' + lines.join('\n') + '\n\nПодскажите, пожалуйста, по срокам и стоимости.');
+    cartSend.href = 'https://wa.me/79045282692?text=' + encodeURIComponent(buildCartText());
   }
   function openCart() { cartPanel.classList.add('open'); cartOverlay.classList.add('show'); }
   function closeCart() { cartPanel.classList.remove('open'); cartOverlay.classList.remove('show'); }
   cartSend.addEventListener('click', function (e) {
     if (cart.length === 0) { e.preventDefault(); openCart(); return; }
     var lines = cart.map(function (it, i) { return (i + 1) + '. ' + it.name + (it.price ? ' — от ' + it.price + ' ₽' : ''); });
-    cartSend.href = 'https://wa.me/79045282692?text=' + encodeURIComponent('Здравствуйте! Хочу заказать украшения:\n\n' + lines.join('\n') + '\n\nПодскажите, пожалуйста, по срокам и стоимости.');
+    cartSend.href = 'https://wa.me/79045282692?text=' + encodeURIComponent(buildCartText());
   });
-  if (cartBtn) cartBtn.addEventListener('click', function () { if (cartPanel.classList.contains('open')) closeCart(); else openCart(); });
+var cartSendMax = document.getElementById('cartSendMax');
+  function buildCartText() {
+    var lines = cart.map(function (it, i) { return (i + 1) + '. ' + it.name + (it.price ? ' — от ' + it.price + ' ₽' : ''); });
+    return 'Здравствуйте! Хочу заказать украшения:\n\n' + lines.join('\n') + '\n\nПодскажите, пожалуйста, по срокам и стоимости.';
+  }
+  if (cartSendMax) cartSendMax.addEventListener('click', function (e) {
+    if (cart.length === 0) { e.preventDefault(); openCart(); return; }
+    cartSendMax.href = 'https://web.max.ru/u/f9LHodD0cOI3aogZdhH6qV42m050VjZrRLzlteIzTpOtxNLHms2takATaN0?text=' + encodeURIComponent(buildCartText());
+  });
+    if (cartBtn) cartBtn.addEventListener('click', function () { if (cartPanel.classList.contains('open')) closeCart(); else openCart(); });
   if (cartOverlay) cartOverlay.addEventListener('click', closeCart);
   if (cartClose) cartClose.addEventListener('click', closeCart);
+  updateCart();
 
   var reviews = [
     { n: 'Аня', a: 'А', t: '«Брала браслет в подарок маме. Фото в каталоге совпали с реальностью, упаковано аккуратно. Мама в восторге!»' },
